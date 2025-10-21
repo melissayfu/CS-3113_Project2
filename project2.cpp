@@ -41,7 +41,8 @@ int main() {
 
     int n = processes.size();
     vector<int> order(n);
-    for (int i = 0; i < n; i++) order[i] = i;
+    for (int i = 0; i < n; i++)
+        order[i] = i;
 
     // Sort indices by arrival time
     for (int i = 0; i < n - 1; i++)
@@ -79,8 +80,8 @@ int main() {
                 }
                 current_pid = "Idle";
                 segment_start = time;
-                // Do not set priority for Idle
             }
+
             segment_end = time + idle_time;
             time += idle_time;
             continue;
@@ -90,14 +91,16 @@ int main() {
         map<int, queue<int> >::reverse_iterator it = ready.rbegin();
         int idx = it->second.front();
         it->second.pop();
-        if (it->second.empty()) ready.erase(it->first);
+        if (it->second.empty())
+            ready.erase(it->first);
 
         int run_time = (processes[idx].remaining_time < time_quantum) ? processes[idx].remaining_time : time_quantum;
 
         // Check for higher-priority arrivals during run
         int end_time = time + run_time;
         for (int i = next_idx; i < n; i++) {
-            if (processes[order[i]].arrival_time > time && processes[order[i]].arrival_time < end_time &&
+            if (processes[order[i]].arrival_time > time &&
+                processes[order[i]].arrival_time < end_time &&
                 processes[order[i]].priority > processes[idx].priority) {
                 end_time = processes[order[i]].arrival_time;
                 run_time = end_time - time;
@@ -117,10 +120,10 @@ int main() {
             }
             current_pid = processes[idx].id;
             segment_start = time;
-            current_priority = processes[idx].priority; // Only for real processes
+            current_priority = processes[idx].priority;
         }
-        segment_end = time + run_time;
 
+        segment_end = time + run_time;
         processes[idx].remaining_time -= run_time;
         time += run_time;
 
@@ -130,7 +133,7 @@ int main() {
             processes[idx].completion_time = time;
             completed++;
         } else {
-            ready[processes[idx].priority].push(idx); // round-robin
+            ready[processes[idx].priority].push(idx);
         }
     }
 
@@ -156,7 +159,9 @@ int main() {
 
     // CPU Utilization
     int total_burst = 0;
-    for (int i = 0; i < n; i++) total_burst += processes[i].burst_time;
+    for (int i = 0; i < n; i++)
+        total_burst += processes[i].burst_time;
+
     cout << "\nCPU Utilization Time\n" << total_burst << "/" << time << "\n";
 
     return 0;
